@@ -1,13 +1,13 @@
 const Stellarsdk = require('stellar-sdk')
-const server = new Stellarsdk.Server('https://kem-testnet-europe0.kinesisgroup.io', { allowHttp: true })
-const passPhrase = 'KEM UAT'
+const server = new Stellarsdk.Server('https://kem-mainnet-america1.kinesisgroup.io', { allowHttp: true })
+const passPhrase = 'KEM LIVE'
 
-const rootSecret = 'SBFZOOYTRZ3PQ4XSUOW2T7IJ5X75JKYHTP2U3V4SIYXZNIGA6LW5KOT3'
+const rootSecret = 'SC2M6ZGKEW4N5HI5NS4PBWDJ5QVYAVAY2PLYF3QTB445KU3VXMQEHSR4'
 const sourceKeys = Stellarsdk.Keypair.fromSecret(rootSecret)
 const rootPublic = sourceKeys.publicKey()
 
-// const signJeremy = Stellarsdk.Keypair.fromSecret('SDSW2PXCGGJUJLWUU5UC4R2YAKVJOEY2UIFGSR73CRZ4DYE4RSDCOH5P')
-// const signNitish = Stellarsdk.Keypair.fromSecret('SAVZJGVD4PJHRCGQPWPPGX254G4A4PPJCANPSTP6UD7CYDIYQCNS4RX5')
+// const signJeremy = Stellarsdk.Keypair.fromSecret('SCXG5HOOOQ4IRAZNBWB4LWYYB2AIHP37MQ47YDBSCQGUH4ALJ5L3MN6S')
+// const signNitish = Stellarsdk.Keypair.fromSecret('SBXY6JYHEZELBGN5AZA425KRP64LDSYQTJ5UX4H37OZ3JJBBEK3EDZ6V')
 
 console.log(rootPublic)
 const newAccountPublic = 'GDITIX7PTPVNZZNDJWSAX4CRGKRHQMCK7A2LYO7Q2HAGLQFTQLGH654B'
@@ -24,19 +24,19 @@ const fundAccount = async () => {
         .then(({ id, sequence }) => {
             let acc = new Stellarsdk.Account(id, sequence);
             console.log(`id: ${id}, sequence: ${sequence}`)
-            let fee = '225000001'; //4500001
+            let fee = '67501'; //4500001
             let txn = new Stellarsdk.TransactionBuilder(acc, { fee, networkPassphrase: passPhrase })
-                .addOperation(Stellarsdk.Operation.createAccount({
-                    destination: newAccountPublic,
-                    startingBalance: "5000"
-                })) // <- funds and creates destinationA
-                // .addOperation(Stellarsdk.Operation.payment({
+                // .addOperation(Stellarsdk.Operation.createAccount({
                 //     destination: newAccountPublic,
-                //     amount: "100",
-                //     asset: Stellarsdk.Asset.native()
-                // }))  // <- sends 100 XLM to destinationB
+                //     startingBalance: "0.0000002"
+                // })) // <- funds and creates destinationA
+                .addOperation(Stellarsdk.Operation.payment({
+                    destination: newAccountPublic,
+                    amount: "1.5",
+                    asset: Stellarsdk.Asset.native()
+                }))  // <- sends 100 XLM to destinationB
                 // .addOperation(Stellarsdk.Operation.inflation({
-                //     source: 'GBUXCWNJQNZ73H4WRM36PS7FTZLUZCTGTTA3GZVGXEOI562WGC4X3BUX'
+                //     source: 'GDOH22HD2ORICBF3V2M5K5FWX6IENHKXBI6JO7IOA2G5SVI2EDGIRYRN'
                 // }))
                 .setTimeout(30)
                 .build();
@@ -58,10 +58,10 @@ const multiSigAccount = () => {
     server.loadAccount(rootPublic)
         .then(({ id, sequence }) => {
             let acc = new Stellarsdk.Account(id, sequence);
-            let jeremy = Stellarsdk.Keypair.publicKey(signJeremy)
-            var nitish = Stellarsdk.Keypair.publicKey(signNitish)
+            let jeremy = signJeremy.publicKey()
+            var nitish = signNitish.publicKey()
 
-            let fee = '100';
+            let fee = '1';
             let txn = new Stellarsdk.TransactionBuilder(acc, { fee: fee, networkPassphrase: passPhrase })
                 .addOperation(Stellarsdk.Operation.setOptions({
                     signer: {
@@ -76,10 +76,10 @@ const multiSigAccount = () => {
                     }
                 }))
                 .addOperation(Stellarsdk.Operation.setOptions({
-                    masterWeight: 3, // set master key weight
+                    masterWeight: 3,
                     lowThreshold: 2,
-                    medThreshold: 5, // a payment is medium threshold
-                    highThreshold: 7 // make sure to have enough weight to add up to the high threshold!
+                    medThreshold: 5,
+                    highThreshold: 7
                 }))
                 .setTimeout(30)
                 .build();

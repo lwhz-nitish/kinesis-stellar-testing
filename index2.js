@@ -4,7 +4,7 @@ const JsKinesis = require('stellar-sdk')
 
 // const rootSecret = 'SC3QXJN2QHTWGJWBZ5DW6MD2MWVUOY5UKRQBXNQQR2A3ZN55BZ54JC2E'
 // const sourceKeys = JsKinesis.Keypair.fromSecret(rootSecret)
-const sourceKeys = JsKinesis.Keypair.master("Kinesis KAG Test Yield feepool")
+const sourceKeys = JsKinesis.Keypair.master("Kinesis KAG Test Yield")
 const rootPublic = sourceKeys.publicKey()
 
 console.log(sourceKeys.publicKey())
