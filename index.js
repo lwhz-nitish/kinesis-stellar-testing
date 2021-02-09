@@ -1,8 +1,8 @@
 const Stellarsdk = require('stellar-sdk')
-const server = new Stellarsdk.Server('https://kem-mainnet-america1.kinesisgroup.io', { allowHttp: true })
-const passPhrase = 'KEM LIVE'
+const server = new Stellarsdk.Server('https://kem-testnet.kinesisgroup.io', { allowHttp: true })
+const passPhrase = 'KEM UAT'
 
-const rootSecret = 'SC2M6ZGKEW4N5HI5NS4PBWDJ5QVYAVAY2PLYF3QTB445KU3VXMQEHSR4'
+const rootSecret = 'SBFZOOYTRZ3PQ4XSUOW2T7IJ5X75JKYHTP2U3V4SIYXZNIGA6LW5KOT3'
 const sourceKeys = Stellarsdk.Keypair.fromSecret(rootSecret)
 const rootPublic = sourceKeys.publicKey()
 
@@ -10,7 +10,7 @@ const rootPublic = sourceKeys.publicKey()
 // const signNitish = Stellarsdk.Keypair.fromSecret('SBXY6JYHEZELBGN5AZA425KRP64LDSYQTJ5UX4H37OZ3JJBBEK3EDZ6V')
 
 console.log(rootPublic)
-const newAccountPublic = 'GDITIX7PTPVNZZNDJWSAX4CRGKRHQMCK7A2LYO7Q2HAGLQFTQLGH654B'
+const newAccountPublic = 'GAKORGXGFGPMJXSAVW3AMDO25ZUPRJFF3BSIV4O3PSH7DRWQFWO5TIHR'
 
 const createNewAccount = () => {
     let pair = Stellarsdk.Keypair.random()
@@ -24,17 +24,17 @@ const fundAccount = async () => {
         .then(({ id, sequence }) => {
             let acc = new Stellarsdk.Account(id, sequence);
             console.log(`id: ${id}, sequence: ${sequence}`)
-            let fee = '67501'; //4500001
+            let fee = '1'; //4500001
             let txn = new Stellarsdk.TransactionBuilder(acc, { fee, networkPassphrase: passPhrase })
-                // .addOperation(Stellarsdk.Operation.createAccount({
-                //     destination: newAccountPublic,
-                //     startingBalance: "0.0000002"
-                // })) // <- funds and creates destinationA
-                .addOperation(Stellarsdk.Operation.payment({
+                .addOperation(Stellarsdk.Operation.createAccount({
                     destination: newAccountPublic,
-                    amount: "1.5",
-                    asset: Stellarsdk.Asset.native()
-                }))  // <- sends 100 XLM to destinationB
+                    startingBalance: "0.0000002"
+                })) // <- funds and creates destinationA
+                // .addOperation(Stellarsdk.Operation.payment({
+                //     destination: newAccountPublic,
+                //     amount: "5000",
+                //     asset: Stellarsdk.Asset.native()
+                // }))  // <- sends 100 XLM to destinationB
                 // .addOperation(Stellarsdk.Operation.inflation({
                 //     source: 'GDOH22HD2ORICBF3V2M5K5FWX6IENHKXBI6JO7IOA2G5SVI2EDGIRYRN'
                 // }))
@@ -166,7 +166,7 @@ const mergeAccount = (sourcePrivate, dest) => {
 
 
 // createNewAccount();
-fundAccount();
+// fundAccount();
 // checkAccountPresence(rootPublic);
 // getAccountTxHistory(newAccountPublic);
 // getBalance(newAccountPublic);
