@@ -2,12 +2,12 @@ const Kinesis = require('js-kinesis-sdk')
 // const stellarTx = require('./kinesis2')
 
 const connection = {
-    endpoint: 'https://kau-mainnet.kinesisgroup.io',
-    passphrase: 'Kinesis Live'
+    endpoint: 'https://kag-testnet-oceania1.kinesisgroup.io',
+    passphrase: 'Kinesis KAG UAT'
 }
 
 const request = {
-    targetPayee: 'GDITIX7PTPVNZZNDJWSAX4CRGKRHQMCK7A2LYO7Q2HAGLQFTQLGH654B',
+    targetPayee: 'GBJDSV53EM5OIPFX3KU25CMS3YZKTB6HBNCXQ77FCTSRDCZBXPCKJPJN',
     amount: '10',
     memo: 'sdk-test',
     fee: '450100',
@@ -16,29 +16,37 @@ const request = {
 
 let doPayment = async () => {
     Kinesis.Network.use(new Kinesis.Network(connection.passphrase))
+    console.log("aaaaa")
     const server = new Kinesis.Server(connection.endpoint)
     const sourceKeys = Kinesis.Keypair.fromSecret(request.sourceSecret)
-    const { id, sequence } = await server.loadAccount(request.targetPayee)
+    const { id, sequence } = await server.loadAccount(sourceKeys.publicKey())
+    console.log(sequence)
     const acc = new Kinesis.Account(id, sequence)
     const transaction = new Kinesis.TransactionBuilder(acc, { fee: request.fee })
+        // .addOperation(
+        //     Kinesis.Operation.payment({
+        //         amount: request.amount,
+        //         destination: request.targetPayee,
+        //         asset: Kinesis.Asset.native(),
+        //     }),
+        // )
         .addOperation(
-            Kinesis.Operation.payment({
-                amount: request.amount,
+            Kinesis.Operation.createAccount({
                 destination: request.targetPayee,
-                asset: Kinesis.Asset.native(),
-            }),
+                startingBalance: request.amount
+            })
         )
         .addMemo(Kinesis.Memo.text(request.memo || ''))
         .build()
     transaction.sign(sourceKeys)
     console.log(transaction.fee.low)
-    // server.submitTransaction(transaction)
-    //     .then(msg => console.log("Sucess:", msg))
-    //     .catch(err => {
-    //         // console.log("Error :", err.request)
-    //         console.error("Error :", err)
-    //         console.log("ErrorDetail :", err.response)
-    //     })
+    server.submitTransaction(transaction)
+        .then(msg => console.log("Sucess:", msg))
+        .catch(err => {
+            // console.log("Error :", err.request)
+            console.error("Error :", err)
+            console.log("ErrorDetail :", err.data.extras)
+        })
 }
 
 
@@ -98,8 +106,8 @@ async function doPaymentToAccount() {
     const { sequence } = await server.loadAccount('GBGMVYDN4ECORMMTEIGS6FVX3IB5U6DV5JHG5XI33ZEOVSXKVDMVDYFX')
     console.log(sequence)
 }
-doPaymentToAccount()
+// doPaymentToAccount()
 // validateAddress()
-// doPayment()
+doPayment()
 // importTx()
 // getOperationsForAccount()
