@@ -1,7 +1,7 @@
 const stellar = require('stellar-sdk')
-const phraseString = 'KEM UAT'
+const phraseString = 'learn armed jeans aerobic depth frown ball drift proof muscle theory betray'
 // const server = new JsKinesis.Server('http://ec2-3-248-231-34.eu-west-1.compute.amazonaws.com:8000', { allowHttp: true })
-// const passPhrase = 'Kinesis KAG Test Yield'
+const passPhrase = 'Kinesis KAG Test Yield'
 
 // const rootSecret = 'SC3QXJN2QHTWGJWBZ5DW6MD2MWVUOY5UKRQBXNQQR2A3ZN55BZ54JC2E'
 // const sourceKeys = JsKinesis.Keypair.fromSecret(rootSecret)
@@ -10,7 +10,9 @@ const rootPublic = sourceKeys.publicKey()
 
 console.log(sourceKeys.publicKey())
 console.log(sourceKeys.secret())
-const newAccountPublic = 'GBVGFXNNCF6WIVRQBAZNNZM4XNOJBXTZI55W63GV5FWFSX6JBLMLIQZG'
+// const newAccountPublic = 'GBVGFXNNCF6WIVRQBAZNNZM4XNOJBXTZI55W63GV5FWFSX6JBLMLIQZG'
+
+
 
 // const createNewAccount = () => {
 //     let pair = JsKinesis.Keypair.random()

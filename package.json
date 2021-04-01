@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@abx/js-kinesis-sdk-v2": "0.0.26",
+    "@abx/js-kinesis-sdk-v2": "0.0.30",
+    "bip39": "2.5.0",
+    "ed25519-hd-key": "^1.2.0",
+    "express": "^4.17.1",
+    "fetch": "^1.1.0",
     "js-kinesis-sdk": "^0.9.10",
     "node-fetch": "^2.6.1",
     "sha256": "^0.2.0",

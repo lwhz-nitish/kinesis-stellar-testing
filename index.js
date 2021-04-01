@@ -2,7 +2,7 @@ const Stellarsdk = require('stellar-sdk')
 const server = new Stellarsdk.Server('https://kem-testnet.kinesisgroup.io', { allowHttp: true })
 const passPhrase = 'KEM UAT'
 
-const rootSecret = 'SBFZOOYTRZ3PQ4XSUOW2T7IJ5X75JKYHTP2U3V4SIYXZNIGA6LW5KOT3'
+const rootSecret = 'SCYOHMBRQ7LXEPITLO5GUVO7IDPWPDS7TMVDMG4K66FGWQ4INZPUN3H7'
 const sourceKeys = Stellarsdk.Keypair.fromSecret(rootSecret)
 const rootPublic = sourceKeys.publicKey()
 
@@ -104,22 +104,24 @@ const checkAccountPresence = (publicKey) => {
         .catch((err) => console.log(err))
 }
 
-const getAccountTxHistory = (publicKey) => {
-    server.transactions()
-        .forAccount(publicKey)
-        .call()
-        .then(function (page) {
-            console.log('Page 1: ');
-            console.log(page.records);
-            return page.next();
-        })
-        .then(function (page) {
-            console.log('Page 2: ');
-            console.log(page.records);
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
+const getAccountTxHistory = async (publicKey) => {
+    const transactions = await server.transactions().forAccount(publicKey).call()
+    console.log(transactions)
+
+
+
+    // .then(function (page) {
+    //     console.log('Page 1: ');
+    //     console.log(page.records);
+    //     return page.next();
+    // })
+    // .then(function (page) {
+    //     console.log('Page 2: ');
+    //     console.log(page.records);
+    // })
+    // .catch(function (err) {
+    //     console.log(err);
+    // });
 }
 
 const getBalance = async (publicKey) => {
@@ -163,14 +165,50 @@ const mergeAccount = (sourcePrivate, dest) => {
 
 }
 
+const loadAccount = async () => {
+    const data = await server.loadAccount('GDITIX7PTPVNZZNDJWSAX4CRGKRHQMCK7A2LYO7Q2HAGLQFTQLGH654B')
+    const parsed = JSON.parse(JSON.stringify(data))
+    console.log({
+        _links: parsed._links,
+        id: parsed.id,
+        paging_token: parsed.paging_token,
+        account_id: parsed.account_id,
+        sequence: parsed.sequence,
+        subentry_count: parsed.subentry_count,
+        thresholds: parsed.thresholds,
+        flags: parsed.flags,
+        balances: parsed.balances,
+        signers: parsed.signers,
+        data: parsed.data
+    })
+    // console.log(JSON.parse(JSON.stringify(data))._links)
+    // return data
+}
 
+const readTransaction = (txHash) => {
+    const transaction = new Stellarsdk.Transaction(txHash, passPhrase)
+    // memo = transaction.memo.type === 'text' ? transaction.memo.value.toString() : null
+    console.log(transaction.signatures)
+    // console.log({
+    //     abc: transaction.memo.type,
+    //     // def: transaction.operations,
+    //     // efg: transaction.sequence,
+    //     // hij: transaction.signatures.map(signature => signature.signature.toString())
+    //     hij: transaction.signatures,
+    //     klm: transaction.source
+    // })
+}
 
 // createNewAccount();
 // fundAccount();
 // checkAccountPresence(rootPublic);
-// getAccountTxHistory(newAccountPublic);
+// getAccountTxHistory('GDITIX7PTPVNZZNDJWSAX4CRGKRHQMCK7A2LYO7Q2HAGLQFTQLGH654B');
 // getBalance(newAccountPublic);
 // makePayment(rootPublic, rootSecret, newAccountPublic, "10000");
 // mergeAccount("SDM737LOFJSGF3IAUUSUVCEROSYQDYK747GX5LL3J3OS6YWAMJE7VEF4", "GBVGFXNNCF6WIVRQBAZNNZM4XNOJBXTZI55W63GV5FWFSX6JBLMLIQZG")
-
 // multiSigAccount();
+// loadAccount()
+
+readTransaction("AAAAAgAAAADRNF/vm+rc5aNNpAvwUTKieDBK+DS8O/DRwGXAs4LMfwAAAAEAACZtAAAABgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA1hYmMgdGVzdCBtZW1vAAAAAAAAAQAAAAEAAAAA0TRf75vq3OWjTaQL8FEyongwSvg0vDvw0cBlwLOCzH8AAAABAAAAANE0X++b6tzlo02kC/BRMqJ4MEr4NLw78NHAZcCzgsx/AAAAAAAAAAAdzWUAAAAAAAAAAAOzgsx/AAAAQP3AiMd993BBdUpcUcJiAODyP4ag227xgq9RCpv1gVxLgpFtku1paCBRaTX5xjQx9E9QhzbFt4B4pRq2ZJdWBwxWMLl9AAAAQES7NWG9RDleO9sgqmlx+7jVJNOD/vZtPcl+gCQTwf/kHV7TVSK8sKliWZFVynL7xhikk6u2e/J4KVn1BT0I4wARuUbWAAAAQDukf6eUO/miaHU5Ft+5z5d84UgaFht+HKYdCDpEwJy/qDWBDQkZgs0hNVyqTxaF48+ZqMp0XakAyB+SnGCwxgs=")
+
+// readTransaction("AAAAAgAAAADRNF/vm+rc5aNNpAvwUTKieDBK+DS8O/DRwGXAs4LMfwAAAAEAACZtAAAABgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAADRNF/vm+rc5aNNpAvwUTKieDBK+DS8O/DRwGXAs4LMfwAAAAAAAAAAO5rKAAAAAAAAAAAA")

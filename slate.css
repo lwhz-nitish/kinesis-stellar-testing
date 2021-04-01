@@ -1,0 +1,44 @@
+
+@keyframes grow {
+    0% {
+        width: 100%;
+    }
+    50% {
+        width: 40%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.container{
+    display: flex;
+    background-color: #BDBDBD;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+    margin: 0px auto;
+    animation: grow 5s infinite;
+}
+
+.child {
+    min-width: 10rem;
+    min-height: 10rem;
+    margin: 0.4rem;
+    border-radius: 1em;
+    background-color: lightblue;
+}
+
+.red-box{
+    background-color: darkred;
+}
+
+.green-box{
+    background-color: darkgreen;
+}
+
+.yellow-box {
+    background-color: khaki;
+}
+
